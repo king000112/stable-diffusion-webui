@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Moda Kontent Generatori</title>
+    <style>
+        .container { display: flex; }
+        .column { width: 30%; margin: 10px; }
+        img { width: 100%; border: 2px solid #ddd; }
+        button { margin-top: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="column">
+            <h3>Model</h3>
+            <select id="model">
+                <option>Model 1</option>
+                <option>Model 2</option>
+                <option>Model 3</option>
+            </select>
+        </div>
+        
+        <div class="column">
+            <h3>Kiyim</h3>
+            <select id="clothing">
+                <option>Qizil ko'ylak</option>
+                <option>Kok jilet</option>
+                <option>Oq yubka</option>
+            </select>
+        </div>
+        
+        <div class="column">
+            <h3>Fon</h3>
+            <select id="background">
+                <option>Bog'</option>
+                <option>Kafe</option>
+                <option>Plaj</option>
+            </select>
+        </div>
+    </div>
+    
+    <button onclick="generateImage()">Generatsiya qilish</button>
+    
+    <div id="result"></div>
+    
+    <script>
+        async function generateImage() {
+            const model = document.getElementById('model').value;
+            const clothing = document.getElementById('clothing').value;
+            const background = document.getElementById('background').value;
+            
+            const prompt = `${model} wearing ${clothing}, ${background}, professional fashion photography, 4k`;
+            
+            const response = await fetch('http://localhost:7860/sdapi/v1/txt2img', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt })
+            });
+            
+            const data = await response.json();
+            document.getElementById('result').innerHTML = `<img src="data:image/png;base64,${data.images[0]}">`;
+        }
+    </script>
+</body>
+</html>
